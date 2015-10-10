@@ -1,0 +1,33 @@
+---
+whereami: ora12.thewoodruffs.org
+
+# global oracle vars
+oracle_base_dir:                 &oracleBase '/u01/app/oracle'
+oracle_home_dir:                 &oracleHome '/u01/app/oracle/product/12.1/dbhome_1'
+oracle_version:                  '12.1'
+oraInventory_dir:		 '/u01/app'
+ora_password:			 'delphi'
+
+# global OS vars
+oracle_os_user:                  "oracle"
+oracle_os_group:                 "dba"
+oracle_download_dir:             "/install"
+oracle_source:                   "/software"
+
+# GI Install
+grid_version:			'12.1.0.2'
+grid_file:			'linuxamd64_12102_grid'
+grid_base_dir:			*oracleBase
+grid_home_dir:			'/u01/app/12.1.0/grid'
+grid_os_user:			'oracle'
+grid_source:			'/software/12cR1/12.1.0.2'
+
+
+
+oracle_database_name:            &dbName 'test'
+oracle_database_domain_name:     'oracle.com'
+oracle_database_service_name:    'test.oracle.com'
+
+oracle_database_sys_password:    'Welcome01'
+oracle_database_system_password: 'Welcome01'
+

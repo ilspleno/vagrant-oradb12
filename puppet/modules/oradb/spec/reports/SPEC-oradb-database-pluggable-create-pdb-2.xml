@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="oradb::database_pluggable create pdb 2" tests="1" time="0.033015" failures="0" errors="0" skipped="0" timestamp="2015-07-25T16:28:32+02:00">
+  <testcase name="oradb::database_pluggable create pdb 2 should raise Puppet::Error with message matching /You must specify an pdb_admin_password/" time="0.032586">
+  </testcase>
+</testsuite>

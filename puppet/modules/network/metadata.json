@@ -1,0 +1,48 @@
+{
+  "name": "ULHPC-network",
+  "version": "0.1.2",
+  "author": "S. Varrette, H. Cartiaux, V. Plugaru, S. Diehl aka. UL HPC Management Team",
+  "summary": "Configure various network aspects (interfaces etc.)",
+  "license": "GPL-3.0",
+  "source": "https://github.com/ULHPC/puppet-network",
+  "project_page": "https://github.com/ULHPC/puppet-network",
+  "issues_url": "https://github.com/ULHPC/puppet-network/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">=4.2.2 <5.0.0"},
+    {"name":"puppetlabs/concat","version_requirement":">= 1.2.0 < 2.0.0"}
+  ],
+  "mail": "hpc-sysadmins@uni.lu",
+  "description": "Configure various network aspects (interfaces etc.)",
+  "docs_project": "ulhpc-puppet-network",
+  "forge_url": "https://forge.puppetlabs.com/ULHPC/network",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "6",
+        "7",
+        "8"
+      ]
+    },
+    {
+      "operatingsystem": "Centos",
+      "operatingsystemrelease": [
+        "6"
+      ]
+    }
+  ],
+  "tags": [
+    "network",
+    "interface"
+  ],
+  "classes": [
+    "network",
+    "network::common",
+    "network::common::debian",
+    "network::common::redhat",
+    "network::params"
+  ],
+  "definitions": [
+    "network::interface"
+  ]
+}

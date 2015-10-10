@@ -1,0 +1,14 @@
+---
+hosts:
+  'ora12.thewoodruffs.org':
+    ip:                "10.0.1.31"
+    host_aliases:      'ora12'
+  'localhost':
+    ip:                "127.0.0.1"
+    host_aliases:    
+      - 'localhost' 
+      - 'localhost.localdomain'
+      - 'localhost4'
+      - 'localhost4.localdomain4'
+
+whereami: common

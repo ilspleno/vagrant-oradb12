@@ -1,0 +1,55 @@
+<% if @interface == "eth0" -%>
+# The primary (eth0) network interface
+<% end -%>
+<% if @comment != "" -%>
+# <%= @comment %>
+<% end -%>
+<% if @auto == true -%>
+auto <%= @interface %>
+<% end -%>
+<% if @address == "" -%>
+<%   if @dhcp -%>
+iface <%= @interface %> inet dhcp
+<%   elsif @manual -%>
+iface <%= @interface %> inet manual
+<%   end -%>
+<% else -%>
+iface <%= @interface %> inet static
+    address   <%= @address %>
+    netmask   <%= @netmask %>
+<% if @network != "" -%>
+    network   <%= @network %>
+<% end -%>
+<% if @broadcast != "" -%>
+    broadcast <%= @broadcast %>
+<% end -%>
+<% if @gateway != "" -%>
+    gateway   <%= @gateway %>
+<% end -%>
+<% if @nettype == 'Infiniband' and connected_mode == true -%>
+    pre-up      echo connected > /sys/class/net/<%= @interface %>/mode
+    pre-up      ifconfig <%= @interface %> mtu 65520
+    post-down   echo datagram > /sys/class/net/<%= @interface %>/mode
+    post-down   ifconfig <%= @interface %> mtu 2044
+<% end -%>
+<% @pre_up_array.each    do |preu|  -%>
+    pre-up   <%= preu %>
+<% end -%>
+<% @post_up_array.each   do |postu| -%>
+    post-up   <%= postu %>
+<% end -%>
+<% @pre_down_array.each  do |pred|  -%>
+    pre-down  <%= pred %>
+<%  end -%>
+<% @post_down_array.each do |postd| -%>
+    post-down <%= postd %>
+<% end -%>
+<% if @dns_nameservers_array.empty? == false -%>
+    # dns-* options are implemented by the resolvconf package, if installed
+    dns-nameservers <% @dns_nameservers_array.each do |ns| -%><%= ns %> <% end -%>
+<% if @dns_search != "" %>
+    dns-search      <%= @dns_search %>
+<% end -%>
+<% end -%>
+<% end -%>
+
