@@ -2,6 +2,8 @@
 
 require 'yaml'
 
+system "facter > /tmp/facts.txt"
+
 # If a disk is smaller than this size it's considered a candidate for OCRVOTE
 OCRVOTE_SIZE=5368709120
 UDEV_RULE_FILE="/etc/udev/rules.d/80-oracle-asm.rules"

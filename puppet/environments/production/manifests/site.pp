@@ -10,15 +10,15 @@ node 'ora12.thewoodruffs.org'  {
 # operating settings for Database & Middleware
 class oradb_os {
 
-  $default_params = {}
-  $host_instances = hiera('hosts', [])
-  create_resources('host',$host_instances, $default_params)
+#  $default_params = {}
+#  $host_instances = hiera('hosts', [])
+#  create_resources('host',$host_instances, $default_params)
 
-  network::interface { 'eth1':
-	address => '10.0.1.31',
-	netmask => '255.255.255.0',
-        gateway => '10.0.1.1',
-  }  
+#  network::interface { 'eth1':
+#	address => '10.0.1.31',
+#	netmask => '255.255.255.0',
+#        gateway => '10.0.1.1',
+#  }  
 
   service { iptables:
     enable    => false,
@@ -117,16 +117,6 @@ class oradb_os {
 		value => "10240";
   }
 
-#  class { 'limits':
-#         config => {
-#                    '*'       => { 'nofile'  => { soft => '2048'   , hard => '8192',   },},
-#                    'oracle'  => { 'nofile'  => { soft => '65536'  , hard => '65536',  },
-#                                    'nproc'  => { soft => '2048'   , hard => '16384',  },
-#                                    'stack'  => { soft => '10240'  ,},},
-#                    },
-#         use_hiera => false,
-#  }
-
 	file { '/root/asm_provision.rb':
 		ensure => 'file',
 		source => '/vagrant/scripts/asm_provision.rb',
@@ -174,30 +164,56 @@ class oradb_12c {
 	  puppet_download_mnt_point => hiera('grid_source'),
   }
 
-  ora_asm_diskgroup{ 'DATA@+ASM':
-	  ensure          => 'present',
-	  au_size         => '1',
-	  compat_asm      => '12.2.0.0.0',
-	  compat_rdbms    => '11.2.0.0.0',
-	  diskgroup_state => 'MOUNTED',
-	  disks           => {'DATA_0000' => {'diskname' => 'DATA_0001', 'path' => '/dev/oracleasm/disk1'},
-			      'DATA_0001' => {'diskname' => 'DATA_0002', 'path' => '/dev/oracleasm/disk2'},
-			      'DATA_0002' => {'diskname' => 'DATA_0003', 'path' => '/dev/oracleasm/disk3'},
-                             },
-	  redundancy_type => 'EXTERNAL',
-  }
-  ora_asm_diskgroup{ 'RECO@+ASM':
-	  ensure          => 'present',
-	  au_size         => '1',
-	  compat_asm      => '12.2.0.0.0',
-	  compat_rdbms    => '11.2.0.0.0',
-	  diskgroup_state => 'MOUNTED',
-	  disks           => {'RECO_0000' => {'diskname' => 'RECO_0001', 'path' => '/dev/oracleasm/disk4'},
-			      'RECO_0001' => {'diskname' => 'RECO_0002', 'path' => '/dev/oracleasm/disk5'},
-                             },
-	  redundancy_type => 'EXTERNAL',
-  }
-
-}                    
+  exec { 'asm_diskgroups':
+                command => '/vagrant/scripts/asm_diskgroup.sh',
+		user    => 'oracle',
+                require => Oradb::Installasm['db_linux-x64'],
+        }
 
 
+
+	oradb::installdb{ '12.1.0.2_Linux-x86-64':
+	  version                   => '12.1.0.2',
+	  file                      => 'linuxamd64_12102_database',
+	  database_type             => 'EE',
+	  oracle_base               => '/u01/app/oracle',
+	  oracle_home               => '/u01/app/oracle/product/12.1.0/dbhome_1',
+	  bash_profile              => true,
+	  user                      => 'oracle',
+	  group                     => 'dba',
+	  group_install             => 'dba',
+	  group_oper                => 'dba',
+	  download_dir              => '/install',
+	  zip_extract               => true,
+	  puppet_download_mnt_point => '/software/12cR1/12.1.0.2',
+	  require		    => Exec['asm_diskgroups'],
+	}
+
+	oradb::database{ 'create_db_wibble':
+  oracle_base               => '/u01/app/oracle',
+  oracle_home               => '/u01/app/oracle/product/12.1.0/dbhome_1',
+  version                   => '12.1',
+  user                      => 'oracle',
+  group                     => 'dba',
+  download_dir              => '/install',
+  action                    => 'create',
+  db_name                   => 'wibble',
+  db_domain                 => 'thewoodruffs.org',
+  db_port                   => '1521',
+  sys_password              => 'delphi',
+  system_password           => 'delphi',
+  data_file_destination     => "+DATA",
+  recovery_area_destination => "+RECO",
+  character_set             => "AL32UTF8",
+  nationalcharacter_set     => "UTF8",
+  init_params               => {'open_cursors'        => '1000',
+                                'processes'           => '600',
+                                'job_queue_processes' => '4' },
+  sample_schema             => 'FALSE',
+  memory_percentage         => "40",
+  memory_total              => "2048",
+  database_type             => "MULTIPURPOSE",
+  em_configuration          => "NONE",
+  require                   => Oradb::Installdb['12.1.0.2_Linux-x86-64'],
+}
+}
