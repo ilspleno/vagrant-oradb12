@@ -64,7 +64,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 		end
 
-
 		oradb.vm.provision :shell, :inline => "ln -sf /vagrant/puppet/hiera.yaml /etc/puppetlabs/code/hiera.yaml"
 		oradb.vm.provision :shell, :inline => "ln -sf /vagrant/puppet/hiera.yaml /etc/hiera.yaml"
 
