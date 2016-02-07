@@ -53,10 +53,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 
 		oradb.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
-		oradb.vm.synced_folder "c:/Users/brian/Software", "/software", :mount_options => ["dmode=755","fmode=755"]
+		oradb.vm.synced_folder "d:/Software", "/software", :mount_options => ["dmode=755","fmode=755"]
 
 		oradb.vm.provider :virtualbox do |vb|
-			vb.customize ["modifyvm"     , :id, "--memory" , "4096"]
+			vb.customize ["modifyvm"     , :id, "--memory" , "6144"]
 			vb.customize ["modifyvm"     , :id, "--name"   , "ora12"]
 
 			# Call the function in disk_manager.rb to provision disks for ASM
