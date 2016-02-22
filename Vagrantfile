@@ -60,7 +60,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 			vb.customize ["modifyvm"     , :id, "--name"   , "ora12"]
 
 			# Call the function in disk_manager.rb to provision disks for ASM
-			create_asm_disks(config, vb, disk_layout)
+			create_asm_disks(vb, disk_layout)
 
 		end
 
